@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Request #{{ req.id }} – ServiceDesk{% endblock %}
+{% block content %}
+<div class="container-sm">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Request #{{ req.id }}</h1>
+      <p class="page-sub">Submitted on {{ req.created_at[:10] }}</p>
+    </div>
+    <a href="{{ url_for('user_dashboard') }}" class="btn btn-ghost btn-sm">← Dashboard</a>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.5rem;">
+      <h3 style="font-family:'DM Serif Display',serif;">{{ req.service_type }}</h3>
+      {% if req.status == 'Pending' %}
+        <span class="badge badge-pending">⏳ Pending</span>
+      {% elif req.status == 'In Progress' %}
+        <span class="badge badge-progress">🔄 In Progress</span>
+      {% else %}
+        <span class="badge badge-completed">✅ Completed</span>
+      {% endif %}
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <label>Category</label>
+        <p>{{ req.service_category }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Service Type</label>
+        <p>{{ req.service_type }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Address</label>
+        <p>{{ req.address }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Phone</label>
+        <p>{{ req.phone }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Submitted</label>
+        <p>{{ req.created_at[:16] }}</p>
+      </div>
+      <div class="detail-item">
+        <label>Last Updated</label>
+        <p>{{ req.updated_at[:16] }}</p>
+      </div>
+    </div>
+
+    {% if req.description %}
+    <hr class="divider">
+    <div class="detail-item">
+      <label>Description</label>
+      <p style="margin-top:6px; line-height:1.6;">{{ req.description }}</p>
+    </div>
+    {% endif %}
+
+    {% if req.admin_note %}
+    <hr class="divider">
+    <div style="background:rgba(0,201,167,0.06); border:1px solid rgba(0,201,167,0.2); border-radius:8px; padding:1rem;">
+      <label style="display:block; font-size:0.78rem; color:var(--teal); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px;">Admin Note</label>
+      <p style="color:var(--white);">{{ req.admin_note }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard – ServiceDesk{% endblock %}
+{% block content %}
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My Dashboard</h1>
+      <p class="page-sub">Welcome back, {{ session.user_name }} 👋</p>
+    </div>
+    <a href="{{ url_for('submit_request') }}" class="btn btn-primary">+ New Request</a>
+  </div>
+
+  <!-- Flash messages -->
+  {% for cat, msg in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{ 'success' if cat=='success' else 'error' if cat=='error' else 'warning' }}">{{ msg }}</div>
+  {% endfor %}
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">📋</span>
+      <div><div class="stat-number">{{ stats.total }}</div><div class="stat-label">Total Requests</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⏳</span>
+      <div><div class="stat-number" style="color:var(--amber);">{{ stats.pending }}</div><div class="stat-label">Pending</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🔄</span>
+      <div><div class="stat-number" style="color:var(--teal);">{{ stats.in_progress }}</div><div class="stat-label">In Progress</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <div><div class="stat-number" style="color:#6dc87a;">{{ stats.completed }}</div><div class="stat-label">Completed</div></div>
+    </div>
+  </div>
+
+  <!-- Requests Table -->
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="padding:1.25rem 1.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+      <h3 style="font-family:'DM Serif Display',serif; font-size:1.15rem;">My Service Requests</h3>
+    </div>
+    {% if requests %}
+    <div class="table-wrap" style="border:none; border-radius:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th>Service Type</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in requests %}
+          <tr>
+            <td style="color:var(--muted); font-size:0.82rem;">{{ r.id }}</td>
+            <td>
+              {% if r.service_category == 'Maintenance' %}🏠
+              {% elif r.service_category == 'Cleaning' %}✨
+              {% else %}⚡{% endif %}
+              {{ r.service_category }}
+            </td>
+            <td>{{ r.service_type }}</td>
+            <td style="color:var(--muted); font-size:0.85rem;">{{ r.created_at[:10] }}</td>
+            <td>
+              {% if r.status == 'Pending' %}
+                <span class="badge badge-pending">⏳ Pending</span>
+              {% elif r.status == 'In Progress' %}
+                <span class="badge badge-progress">🔄 In Progress</span>
+              {% else %}
+                <span class="badge badge-completed">✅ Completed</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('view_request', req_id=r.id) }}" class="btn btn-ghost btn-sm">View</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="padding:3rem; text-align:center; color:var(--muted);">
+      <div style="font-size:3rem; margin-bottom:1rem;">📭</div>
+      <p>No service requests yet.</p>
+      <a href="{{ url_for('submit_request') }}" class="btn btn-primary" style="margin-top:1rem;">Submit Your First Request</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

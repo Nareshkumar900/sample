@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Admin Login – ServiceDesk{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="icon">🔐</span>
+      <h2>Admin Portal</h2>
+      <p>Sign in with admin credentials</p>
+    </div>
+
+    {% for cat, msgs in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{ 'success' if cat=='success' else 'error' if cat=='error' else 'warning' }}">{{ msgs }}</div>
+    {% endfor %}
+
+    <div class="card card-tight" style="margin-bottom:1.25rem; background:rgba(0,201,167,0.06); border-color:rgba(0,201,167,0.2);">
+      <p style="font-size:0.82rem; color:var(--teal);">Default credentials: <strong>admin</strong> / <strong>admin123</strong></p>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="admin" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-amber btn-full" style="margin-top:0.5rem;">Access Admin Panel</button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="{{ url_for('index') }}">← Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

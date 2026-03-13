@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}ServiceDesk – Online Service Request Management{% endblock %}
+
+{% block content %}
+<div style="min-height:calc(100vh - 64px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 1.5rem;">
+  <p style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--teal); margin-bottom:1rem; font-weight:600;">Online Service Request Management</p>
+  <h1 style="font-family:'DM Serif Display',serif; font-size:clamp(2.2rem,6vw,3.8rem); line-height:1.15; max-width:700px; margin-bottom:1.25rem;">
+    Request Services.<br><em style="color:var(--teal);">Track Progress.</em><br>Stay Informed.
+  </h1>
+  <p style="color:var(--muted); max-width:480px; line-height:1.7; margin-bottom:2.5rem; font-size:1rem;">
+    A smart platform to submit maintenance, cleaning, and repair requests — and for admins to manage every job with full visibility.
+  </p>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:4rem;">
+    <a href="{{ url_for('register') }}" class="btn btn-primary" style="padding:12px 28px; font-size:1rem;">Get Started Free</a>
+    <a href="{{ url_for('user_login') }}" class="btn btn-ghost" style="padding:12px 28px; font-size:1rem;">Sign In</a>
+  </div>
+
+  <!-- Services Preview -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; max-width:800px; width:100%;">
+    <div class="card" style="text-align:left;">
+      <div style="font-size:2rem; margin-bottom:0.75rem;">🏠</div>
+      <h3 style="font-family:'DM Serif Display',serif; margin-bottom:0.4rem;">Maintenance</h3>
+      <p style="color:var(--muted); font-size:0.88rem;">Home repairs, water leakage, plumbing and more handled promptly.</p>
+    </div>
+    <div class="card" style="text-align:left;">
+      <div style="font-size:2rem; margin-bottom:0.75rem;">✨</div>
+      <h3 style="font-family:'DM Serif Display',serif; margin-bottom:0.4rem;">Cleaning</h3>
+      <p style="color:var(--muted); font-size:0.88rem;">Professional cleaning for homes, offices, and factory spaces.</p>
+    </div>
+    <div class="card" style="text-align:left;">
+      <div style="font-size:2rem; margin-bottom:0.75rem;">⚡</div>
+      <h3 style="font-family:'DM Serif Display',serif; margin-bottom:0.4rem;">Repair</h3>
+      <p style="color:var(--muted); font-size:0.88rem;">Electrical repair and computer repair services on demand.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border); width:100%; max-width:800px; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+    <a href="{{ url_for('admin_login') }}" class="btn btn-outline btn-sm">🔐 Admin Login</a>
+  </div>
+</div>
+{% endblock %}

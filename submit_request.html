@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Submit Request – ServiceDesk{% endblock %}
+{% block content %}
+<div class="container-sm">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">New Service Request</h1>
+      <p class="page-sub">Fill in the details below and we'll get right on it.</p>
+    </div>
+    <a href="{{ url_for('user_dashboard') }}" class="btn btn-ghost btn-sm">← Back</a>
+  </div>
+
+  {% for cat, msg in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{ 'success' if cat=='success' else 'error' }}">{{ msg }}</div>
+  {% endfor %}
+
+  <div class="card">
+    <form method="POST" action="{{ url_for('submit_request') }}">
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="form-group">
+          <label>Service Category</label>
+          <select name="service_category" id="catSelect" required onchange="updateTypes()">
+            <option value="">Select category…</option>
+            {% for cat in services %}
+            <option value="{{ cat }}">
+              {% if cat=='Maintenance' %}🏠{% elif cat=='Cleaning' %}✨{% else %}⚡{% endif %} {{ cat }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Service Type</label>
+          <select name="service_type" id="typeSelect" required>
+            <option value="">Select type…</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description <span style="color:var(--muted); text-transform:none; font-weight:400; font-size:0.82rem;">(optional)</span></label>
+        <textarea name="description" placeholder="Describe the issue or what you need help with…"></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="form-group">
+          <label>Service Address</label>
+          <input type="text" name="address" placeholder="123 Main St, City" required>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="+1 555 000 0000" required>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div style="display:flex; gap:0.75rem; justify-content:flex-end;">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary">Submit Request →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const services = {{ services | tojson }};
+function updateTypes() {
+  const cat = document.getElementById('catSelect').value;
+  const sel = document.getElementById('typeSelect');
+  sel.innerHTML = '<option value="">Select type…</option>';
+  if (services[cat]) {
+    services[cat].forEach(t => {
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t;
+      sel.appendChild(o);
+    });
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Register – ServiceDesk{% endblock %}
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="icon">🔧</span>
+      <h2>ServiceDesk</h2>
+      <p>Create your account</p>
+    </div>
+
+    {% for cat, msgs in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{ 'success' if cat=='success' else 'error' if cat=='error' else 'warning' }}">
+      {{ msgs }}
+    </div>
+    {% endfor %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="John Doe" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" required minlength="6">
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" name="confirm_password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:0.5rem;">Create Account</button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="{{ url_for('user_login') }}">Sign in</a>
+      &nbsp;·&nbsp; <a href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

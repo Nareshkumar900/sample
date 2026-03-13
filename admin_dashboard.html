@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard – ServiceDesk{% endblock %}
+{% block content %}
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Admin Dashboard</h1>
+      <p class="page-sub">Manage all service requests</p>
+    </div>
+    <a href="{{ url_for('admin_logout') }}" class="btn btn-ghost btn-sm">Logout</a>
+  </div>
+
+  {% for cat, msg in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{ 'success' if cat=='success' else 'error' }}">{{ msg }}</div>
+  {% endfor %}
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">👥</span>
+      <div><div class="stat-number">{{ stats.users }}</div><div class="stat-label">Registered Users</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">📋</span>
+      <div><div class="stat-number">{{ stats.total }}</div><div class="stat-label">Total Requests</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⏳</span>
+      <div><div class="stat-number" style="color:var(--amber);">{{ stats.pending }}</div><div class="stat-label">Pending</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🔄</span>
+      <div><div class="stat-number" style="color:var(--teal);">{{ stats.in_progress }}</div><div class="stat-label">In Progress</div></div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <div><div class="stat-number" style="color:#6dc87a;">{{ stats.completed }}</div><div class="stat-label">Completed</div></div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+    <button class="btn btn-ghost btn-sm filter-btn active" data-filter="all">All</button>
+    <button class="btn btn-ghost btn-sm filter-btn" data-filter="Pending">⏳ Pending</button>
+    <button class="btn btn-ghost btn-sm filter-btn" data-filter="In Progress">🔄 In Progress</button>
+    <button class="btn btn-ghost btn-sm filter-btn" data-filter="Completed">✅ Completed</button>
+  </div>
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="table-wrap" style="border:none; border-radius:0;">
+      <table id="requestsTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Category</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in requests %}
+          <tr data-status="{{ r.status }}">
+            <td style="color:var(--muted); font-size:0.82rem;">{{ r.id }}</td>
+            <td>
+              <div style="font-weight:500;">{{ r.user_name }}</div>
+              <div style="font-size:0.78rem; color:var(--muted);">{{ r.user_email }}</div>
+            </td>
+            <td>{{ r.service_category }}</td>
+            <td>{{ r.service_type }}</td>
+            <td style="color:var(--muted); font-size:0.85rem;">{{ r.created_at[:10] }}</td>
+            <td>
+              {% if r.status == 'Pending' %}
+                <span class="badge badge-pending">⏳ Pending</span>
+              {% elif r.status == 'In Progress' %}
+                <span class="badge badge-progress">🔄 In Progress</span>
+              {% else %}
+                <span class="badge badge-completed">✅ Completed</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('admin_view_request', req_id=r.id) }}" class="btn btn-amber btn-sm">Manage</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if not requests %}
+    <div style="padding:3rem; text-align:center; color:var(--muted);">
+      <div style="font-size:3rem; margin-bottom:1rem;">📭</div>
+      <p>No service requests found.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const filter = this.dataset.filter;
+    document.querySelectorAll('#requestsTable tbody tr').forEach(row => {
+      row.style.display = (filter === 'all' || row.dataset.status === filter) ? '' : 'none';
+    });
+  });
+});
+</script>
+<style>
+.filter-btn.active { background: var(--teal); color: var(--navy); border-color: var(--teal); }
+</style>
+{% endblock %}
